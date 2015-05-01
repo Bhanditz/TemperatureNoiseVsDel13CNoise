@@ -74,8 +74,8 @@ else:
     # Assemble all data into a single list
     fullData = []
     for i in range(0, len(rows1) -1):
-        tmpRows1 = rows1[i]
-        fullData.append(tmpRows1[1:] + rows2[i] + rows3[i] + rows4[i])
+        # Trim off the primary key from rows1
+        fullData.append(rows1[1:] + rows2[i] + rows3[i] + rows4[i])
 
 # Filter out lines that don't have all the data
 filteredData = []
@@ -89,8 +89,6 @@ CO2 = LoadData(filteredData, 2)
 CO2_12 = LoadData(filteredData, 3)
 CO2_13 = LoadData(filteredData, 4)
 del13C = LoadData(filteredData, 5)
-
-
 
 temperatureNoise = CalculateNoise(temperature, averagingPeriod)
 CO2Noise = CalculateNoise(CO2, averagingPeriod)
@@ -143,6 +141,7 @@ t1= dates[len(dates) -1 ] + dt.timedelta(0,3600)
 Ax4.set_xlim(t0,t1)
 fig.autofmt_xdate()
 '''
+
 numBins = 300
 
 fig2 = plt.figure('Temperature, xCO2 Del13C Noise Histograms')
@@ -152,7 +151,7 @@ suptitleSTR += '\n ' + str(len(dates)) + ' data points'
 fig2.suptitle(suptitleSTR, fontsize=14, fontweight='bold')
 fig2.subplots_adjust(hspace=0.3)
 
-DrawHist(fig2, 321, temperatureNoise, numBins, 'Temperature u"\u2103"', -0.02, 0.02)
+DrawHist(fig2, 321, temperatureNoise, numBins, 'Temperature ' + '(' + u'\N{DEGREE SIGN}' +'C)', -0.02, 0.02)
 share_ax = DrawHist(fig2, 322, CO2Noise, numBins, 'CO2 noise (ppm)')
 DrawHist(fig2, 323, CO2_12Noise, numBins, '12CO2 noise (ppm)', 'NA', 'NA', 'NA', 'NA', share_ax)
 DrawHist(fig2, 324, CO2_13Noise, numBins, '13CO2 noise (ppm)', -4, 4, 'NA', 'NA', share_ax)
@@ -178,9 +177,8 @@ Ax5 = fig2.add_subplot(111)
 Ax5.scatter(temperatureNoise, CO2_13Noise)
 Ax5.set_xlabel('Temperature noise ($^\circ$C)')
 Ax5.set_ylabel('13CO2 noise (ppm)')
-'''
-
 
 #Ax5.grid(True)
+'''
 
 plt.show()
